@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NSpec;
 using Parties;
+using NUnit.Framework;
+
 namespace PartiesTests
 {
     class describe_organization : nspec
     {
-         Organization child;
+        Organization child;
         Organization parent;
 
         void before_each()
@@ -126,15 +127,38 @@ namespace PartiesTests
 
             context["organizations with the same id"] = () =>
             {    
-                //before = () =>
-                //{
-                //    first = new Organization("first");
-                //    //second = new Organization("second");
-                //};
-
                 it["should be equal when the id values are equal"] = () =>
                 {
                     first.Is(second);
+                };
+            };
+        }
+
+        void accessing_siblings()
+        {
+            Organization parent = new Organization("parent", Guid.NewGuid());
+            Organization childOne  = new Organization("first child", Guid.NewGuid());
+            Organization childTwo  = new Organization("second child", Guid.NewGuid());
+
+            context["when a parent node has multiple children"] = () =>
+            {
+                context["sibling nodes can navigate to one another"] = () =>
+                {
+                    parent.AddChild(childOne);
+                    parent.AddChild(childTwo);
+
+                    it["child one should see a child two node"] = () =>
+                    {
+                        var siblings = childOne.Siblings();
+                        Assert.That(siblings, Is.Not.Null);
+                        siblings.should_not_be_empty();
+                        siblings.should_contain(childTwo);
+                    };
+
+                    it["child two node should see child one node"] = () =>
+                    {
+                        childTwo.Siblings().should_contain(childOne);
+                    };
                 };
             };
         }

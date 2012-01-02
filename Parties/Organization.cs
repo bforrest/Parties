@@ -35,7 +35,19 @@ namespace Parties
             }
         }
 
-        public Organization AddParent(Organization source)
+        public IList<Organization> Siblings()
+        {
+            List<Organization> siblings = new List<Organization>();
+
+            foreach (var org in parents)
+            {
+                siblings.AddRange(org.Children);
+            }
+            
+            return siblings;
+        }
+
+        public virtual Organization AddParent(Organization source)
         {
             parents.Add(source);
             if (!source.Children.Contains(this))
@@ -45,7 +57,7 @@ namespace Parties
             return source;
         }
 
-        public Organization RemoveParent(Organization source)
+        public virtual Organization RemoveParent(Organization source)
         {
             parents.Remove(source);
             if (source.Children.Contains(this))

@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Email.cs" />
     <Compile Include="Organization.cs" />
+    <Compile Include="OrganizationRoot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
